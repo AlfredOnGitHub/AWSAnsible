@@ -1,0 +1,25 @@
+---
+- name: F2
+  hosts: localhost
+  vars_files:
+    - ../keycred
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ USER }}"
+    AWS_SECRET_ACCESS_KEY: "{{ PASSWORD }}"
+  tasks:
+    #    - name: create instance
+    #      ec2:
+    #        instance_type: t2.micro #1vcpu 1gb
+    #        image: ami-0f5457ab1b6214674 #centos8minimal
+    #        region: yourregion
+    #        exact_count: 1
+    #        count_tag:
+    #          Name: Demo
+    #        instance_tags:
+    #          Name: Demo
+
+    #    - name: create keypair
+    #      ec2_key:
+    #        name: kkey
+    #        key_material: 'yourpublicid'
+    #        region: yourregion
