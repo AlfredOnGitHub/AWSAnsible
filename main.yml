@@ -6,6 +6,8 @@
   environment:
     AWS_ACCESS_KEY_ID: "{{ USER }}"
     AWS_SECRET_ACCESS_KEY: "{{ PASSWORD }}"
+  vars:
+    instances_ids: "{{ INSTANCE_IDS }}"
   tasks:
     #    - name: create instance
     #      ec2:
@@ -17,4 +19,10 @@
     #      ec2_key:
     #        name: kkey
     #        key_material: 'yourpublicid'
+    #        region: yourregion
+
+    #    - name: terminate instance
+    #      ec2:
+    #        state: 'absent'
+    #        instance_ids: "{{ instances_ids }}"
     #        region: yourregion
