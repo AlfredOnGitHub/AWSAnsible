@@ -7,12 +7,15 @@
     AWS_ACCESS_KEY_ID: "{{ USER }}"
     AWS_SECRET_ACCESS_KEY: "{{ PASSWORD }}"
   vars:
+    ansible_python_interpreter: /usr/bin/python3
     instances_ids: "{{ INSTANCE_IDS }}"
+    instance_type: "{{ INSTANCE_TYPE | default( INSTANCE_TYPE_DEFAULT , true) }}"
+    instance_image: "{{ INSTANCE_IMAGE | default( INSTANCE_IMAGE_DEFAULT , true) }}"
   tasks:
     #    - name: create instance
     #      ec2:
-    #        instance_type: t2.micro #1vcpu 1gb
-    #        image: ami-0f5457ab1b6214674 #centos8minimal
+    #        instance_type: "{{ instance_type }}"
+    #        image: "{{ instance_image }}"
     #        region: yourregion
 
     #    - name: create keypair
