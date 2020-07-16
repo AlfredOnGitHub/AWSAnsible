@@ -1,6 +1,7 @@
 AWS using Ansible
 
 What is F2?
+
 F2 stands for "Foundamentals lvl 2".
 
 F2 connects with your localhost and import variables from a file called "keycred". It also have this "ansible_python_interpreter" variable due to a warning with fedora31 and ansible, so we need to specify the python version.
@@ -20,6 +21,7 @@ Well, you can:
 - Print all or specific info about your instances.
 
 -- There is also a task called "wait 1 min". Why is that?
+
 ++ If you want to create an instance and then see all the running instances, you need to use the wait task. It is needed because when you create a new instance, it last a bit until it gets fully running, so you will not being able to see it until the whole proccess ends. That's why it is a minute, but you can do whatever you want with it.
 
 Things that you need to run this playbook:
