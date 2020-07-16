@@ -8,15 +8,27 @@
     AWS_SECRET_ACCESS_KEY: "{{ PASSWORD }}"
   vars:
     ansible_python_interpreter: /usr/bin/python3
-    instances_ids: "{{ INSTANCE_IDS }}"
-    instance_type: "{{ INSTANCE_TYPE | default( INSTANCE_TYPE_DEFAULT , true) }}"
-    instance_image: "{{ INSTANCE_IMAGE | default( INSTANCE_IMAGE_DEFAULT , true) }}"
+    instance_type: "{{ INSTANCE_TYPE | default( 't2.micro' ) }}"
+    instance_image: "{{ INSTANCE_IMAGE | default( 'ami-0f5457ab1b6214674' ) }}"
   tasks:
-    #    - name: create instance
-    #      ec2:
-    #        instance_type: "{{ instance_type }}"
-    #        image: "{{ instance_image }}"
-    #        region: yourregion
+    - name: Terminate all instances
+      ec2_instance:
+        state: absent
+        filters:
+          instance-state-name: running
+        region: yourregion
+      register: output
+
+    - debug:
+        msg: '{{ output }}'
+
+        #    - name: create instance
+        #      ec2:
+        #        instance_type: "{{ instance_type }}"
+        #        image: "{{ instance_image }}"
+        #        region: yourregion
+        #        count: 3
+        #      register: output
 
     #    - name: create keypair
     #      ec2_key:
@@ -24,8 +36,13 @@
     #        key_material: 'yourpublicid'
     #        region: yourregion
 
-    #    - name: terminate instance
-    #      ec2:
-    #        state: 'absent'
-    #        instance_ids: "{{ instances_ids }}"
-    #        region: yourregion
+        #    - name: wait 1 min
+        #      command: >
+        #        sleep 60
+        
+        #    - name: terminate instance
+        #      ec2:
+        #        state: 'absent'
+        #        instance_ids: "{{ output.instances[0].id }}"
+        #        region: yourregion
+

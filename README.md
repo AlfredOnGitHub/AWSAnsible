@@ -9,7 +9,18 @@ You can try to comment that line and run the playbook to see the warning.
 
 Once it gets all the variables, it connects with AWS and do whatever you need.
 
-Right now, it just can create and delete an instance, and create a keypair (linked with your publicid or whatever you want to put in).
+What can you actually do with this?
+
+Well, you can:
+
+- Create and Terminate an specific instance.
+- Terminate all running instances.
+- Create a keypair using your own public ID.
+- Get all the information of the instances, so you just need to filter it.
+- Print all or specific info about your instances.
+
+-- There is also a task called "wait 1 min". Why is that?
+++ If you want to create an instance and then see all the running instances, you need to use the wait task. It is needed because when you create a new instance, it last a bit until it gets fully running, so you will not being able to see it until the whole proccess ends. That's why it is a minute, but you can do whatever you want with it.
 
 Things that you need to run this playbook:
 
