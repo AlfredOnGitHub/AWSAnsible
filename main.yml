@@ -11,38 +11,23 @@
     instance_type: "{{ INSTANCE_TYPE | default( 't2.micro' ) }}"
     instance_image: "{{ INSTANCE_IMAGE | default( 'ami-0f5457ab1b6214674' ) }}"
   tasks:
-    - name: Terminate all instances
-      ec2_instance:
-        state: absent
-        filters:
-          instance-state-name: running
-        region: yourregion
-      register: output
+    - name: create instance
+      ec2:
+        instance_type: "{{ instance_type }}"
+        image: "{{ instance_image }}"
+        wait: yes
+        region: us-east-2
+      register: output 
+   
+    - name: create keypair
+      ec2_key:
+        name: automation
+        key_material: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCxZ/28MnAHBLqwwV69LQgkX2JMfaFnsDKu2tuQrBbJlQEuxKgBNdHq6J+Dgx0bDpLW8dBC2ay+AHUCndzAaQGMdvDYwhqtRwOL8EuGW2BYgITTuCCcmHVJtmWbqLu+00lZ9bXXo8Qp3GyrON2zP31jI2EybJ5ExQE6ieITJiM8LS8dJ77rOiqzHUy/hbxhKTJCf3xgrPzSuRZSvt9hbifXQeGDHfQ+mr12euvkwXaSbPXyJxCTXliWwsETX0n42D9EkHo7nYSiBbZy0QeaazzxJw6pgobPDMcMBPhA32fPrVxxsyKJSpAj9h0zqGutqqXRCdycwNe58KxRkilntV1vDz7dx7k5amLa8NMNSm1+P8uyAZLAk/QffRL1UghEknnVyS3TU296tgwDMw9KYKOirUMf1RcGbfnnVfMQSVDGsNIk81N72FdZdywWF/3H7c4UY6uxqZoVG82O3Xd8WLzk0cdn9BsuNEMFjNmSIAN9jruVKWCUygG1WOQUUcTl9buVpr5WSmeci3eoAXt3Tm4PUUGZAoS5sXpNl0LoNIlKaTPbi9YgEBasOJvkfQcUnD165QZ0kGN3QPPXlDVIhYJkyGMJVrjf2ZnbF0F8I23vAelaAS2h0CQLAL/uxskHqWF7AVFeeaVAxsMu1KRJgZYgwuKKCikHu+SkFiCebHEZzw== 1alfredomontalvo@gmail.com"
+        region: us-east-2
 
-    - debug:
-        msg: '{{ output }}'
-
-        #    - name: create instance
-        #      ec2:
-        #        instance_type: "{{ instance_type }}"
-        #        image: "{{ instance_image }}"
-        #        region: yourregion
-        #        count: 3
-        #      register: output
-
-    #    - name: create keypair
-    #      ec2_key:
-    #        name: kkey
-    #        key_material: 'yourpublicid'
-    #        region: yourregion
-
-        #    - name: wait 1 min
-        #      command: >
-        #        sleep 60
-        
-        #    - name: terminate instance
-        #      ec2:
-        #        state: 'absent'
-        #        instance_ids: "{{ output.instances[0].id }}"
-        #        region: yourregion
+    - name: terminate instance
+      ec2:
+        state: 'absent'
+        instance_ids: "{{ output.instances[0].id }}"
+        region: us-east-2
 
