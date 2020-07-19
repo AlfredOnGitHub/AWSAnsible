@@ -10,24 +10,55 @@
     ansible_python_interpreter: /usr/bin/python3
     instance_type: "{{ INSTANCE_TYPE | default( 't2.micro' ) }}"
     instance_image: "{{ INSTANCE_IMAGE | default( 'ami-0f5457ab1b6214674' ) }}"
+    instance_id: "{{ IDS }}"
   tasks:
-    - name: create instance
-      ec2:
-        instance_type: "{{ instance_type }}"
-        image: "{{ instance_image }}"
-        wait: yes
-        region: us-east-2
-      register: output 
-   
     - name: create keypair
       ec2_key:
         name: automation
         key_material: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCxZ/28MnAHBLqwwV69LQgkX2JMfaFnsDKu2tuQrBbJlQEuxKgBNdHq6J+Dgx0bDpLW8dBC2ay+AHUCndzAaQGMdvDYwhqtRwOL8EuGW2BYgITTuCCcmHVJtmWbqLu+00lZ9bXXo8Qp3GyrON2zP31jI2EybJ5ExQE6ieITJiM8LS8dJ77rOiqzHUy/hbxhKTJCf3xgrPzSuRZSvt9hbifXQeGDHfQ+mr12euvkwXaSbPXyJxCTXliWwsETX0n42D9EkHo7nYSiBbZy0QeaazzxJw6pgobPDMcMBPhA32fPrVxxsyKJSpAj9h0zqGutqqXRCdycwNe58KxRkilntV1vDz7dx7k5amLa8NMNSm1+P8uyAZLAk/QffRL1UghEknnVyS3TU296tgwDMw9KYKOirUMf1RcGbfnnVfMQSVDGsNIk81N72FdZdywWF/3H7c4UY6uxqZoVG82O3Xd8WLzk0cdn9BsuNEMFjNmSIAN9jruVKWCUygG1WOQUUcTl9buVpr5WSmeci3eoAXt3Tm4PUUGZAoS5sXpNl0LoNIlKaTPbi9YgEBasOJvkfQcUnD165QZ0kGN3QPPXlDVIhYJkyGMJVrjf2ZnbF0F8I23vAelaAS2h0CQLAL/uxskHqWF7AVFeeaVAxsMu1KRJgZYgwuKKCikHu+SkFiCebHEZzw== 1alfredomontalvo@gmail.com"
         region: us-east-2
 
-    - name: terminate instance
+    - name: create instance
       ec2:
-        state: 'absent'
-        instance_ids: "{{ output.instances[0].id }}"
+        instance_type: "{{ instance_type }}"
+        image: "{{ instance_image }}"
+        instance_tags: 
+            Name: "{{ item }}"
+        key_name: automation
+        vpc_subnet_id: subnet-6f1d1815
+        assign_public_ip: yes
+        wait: yes
         region: us-east-2
+      loop:
+        - server1
+        - server2
 
+    - name: Get running instances ID
+      ec2_instance_info:
+        filters:
+          "tag:Name": "{{ item }}"
+          instance-state-name: running
+        region: us-east-2
+      register: output
+      loop:
+        - server1
+        - server2
+
+    - set_fact:
+        s1: "{{ output.results[0] }}"
+        s2: "{{ output.results[1] }}"
+
+    - debug:
+        msg: "{{ item }}"
+      loop:
+        - "{{ s1.instances[0].instance_id }}" 
+        - "{{ s2.instances[0].instance_id }}"
+
+    - name: Attaching EBS to an Instance
+      ec2_vol:
+        instance: "{{ item }}"
+        volume_size: 5
+        region: us-east-2    
+      loop:
+        - "{{ s1.instances[0].instance_id }}"
+        - "{{ s2.instances[0].instance_id }}"
