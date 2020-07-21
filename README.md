@@ -6,6 +6,7 @@ F2 stands for "Foundamentals lvl 2".
 
 Ansible ec2 modules example.
 `ansible-playbook main.yml`
+`ansible-playbook cleaner.yml`
 
 What you need:
 - AWS.
