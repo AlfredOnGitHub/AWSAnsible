@@ -4,9 +4,10 @@ What is F2?
 
 F2 stands for "Foundamentals lvl 2".
 
-Ansible ec2 modules example.
-`ansible-playbook main.yml`
-`ansible-playbook cleaner.yml`
+An AWS provisioning Ansible role.
+`ansible-playbook main.yml -e "status="
+
+Required values for "status": create or delete.
 
 What you need:
 - AWS.
